@@ -123,6 +123,14 @@ Vagrant.configure("2") do |config|
       ip = "172.17.8.#{i+100}"
       config.vm.network :private_network, ip: ip
 
+      #  Update hosts file
+      (1..$num_instances).each do|v|
+        config.vm.provision "shell" do |s|
+          s.inline = "echo $1 $2 >> /etc/hosts"
+          s.args = ["172.17.8.#{i+100}", "%s-%02d" % [$instance_name_prefix, v]]
+        end
+      end
+
       # Uncomment below to enable NFS for sharing the host machine into the coreos-vagrant VM.
       #config.vm.synced_folder ".", "/home/core/share", id: "core", :nfs => true, :mount_options => ['nolock,vers=3,udp']
       $shared_folders.each_with_index do |(host_folder, guest_folder), index|
