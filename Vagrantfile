@@ -9,7 +9,7 @@ CLOUD_CONFIG_PATH = File.join(File.dirname(__FILE__), "user-data")
 CONFIG = File.join(File.dirname(__FILE__), "config.rb")
 
 # Defaults for config options defined in CONFIG
-$num_instances = 1
+$num_instances = 3
 $instance_name_prefix = "core"
 $update_channel = "alpha"
 $image_version = "current"
@@ -127,7 +127,7 @@ Vagrant.configure("2") do |config|
       (1..$num_instances).each do|v|
         config.vm.provision "shell" do |s|
           s.inline = "echo $1 $2 >> /etc/hosts"
-          s.args = ["172.17.8.#{i+100}", "%s-%02d" % [$instance_name_prefix, v]]
+          s.args = ["172.17.8.#{v+100}", "%s-%02d" % [$instance_name_prefix, v]]
         end
       end
 
